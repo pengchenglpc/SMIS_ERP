@@ -7,9 +7,7 @@
     <artifactId>smis_erp</artifactId>
     <version>1.0.0-SNAPSHOT</version>
   </parent>
-  <groupId>com.smis</groupId>
   <artifactId>smis-erp-schedule</artifactId>
-  <version>1.0.0-SNAPSHOT</version>
   <name>smis-erp-schedule</name>
   <url>http://maven.apache.org</url>
   <properties>
