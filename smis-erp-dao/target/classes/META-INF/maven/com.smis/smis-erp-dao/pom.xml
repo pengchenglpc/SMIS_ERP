@@ -7,9 +7,7 @@
     <artifactId>smis_erp</artifactId>
     <version>1.0.0-SNAPSHOT</version>
   </parent>
-  <groupId>com.smis</groupId>
   <artifactId>smis-erp-dao</artifactId>
-  <version>1.0.0-SNAPSHOT</version>
   <name>smis-erp-dao</name>
   <url>http://maven.apache.org</url>
   <properties>
@@ -21,6 +19,16 @@
       <artifactId>junit</artifactId>
       <version>3.8.1</version>
       <scope>test</scope>
+    </dependency>
+    <dependency>
+    	<groupId>com.smis</groupId>
+    	<artifactId>smis-erp-common</artifactId>
+    	<version>1.0.0-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+    	<groupId>com.smis</groupId>
+    	<artifactId>smis-erp-core</artifactId>
+    	<version>1.0.0-SNAPSHOT</version>
     </dependency>
   </dependencies>
 </project>
