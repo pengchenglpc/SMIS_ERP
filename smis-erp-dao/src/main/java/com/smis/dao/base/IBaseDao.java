@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
+import com.simis.base.vo.PageVo;
 import com.simis.base.vo.QueryVo;
 
 public interface IBaseDao<T, PK extends Serializable> {
@@ -17,4 +18,7 @@ public interface IBaseDao<T, PK extends Serializable> {
 	public List<T> findByProperties(Map<String, Serializable> properties);
 	public List<T> findByJpql(String jpql);
 	public List<T> findByJpql(String jpql, List<Object> params);
+	public PageVo<T> findPageByJpql(String jpql, String countJqpl,int pageIndex, int pageSize, List<Object> params);
+	public Integer findTotalSize(String jqpl);
+	public Integer findTotalSize(String jqpl, List<Object> params);
 }

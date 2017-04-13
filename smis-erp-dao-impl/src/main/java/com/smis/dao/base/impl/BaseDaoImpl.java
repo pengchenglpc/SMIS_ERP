@@ -17,6 +17,7 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.CollectionUtils;
 
+import com.simis.base.vo.PageVo;
 import com.simis.base.vo.QueryVo;
 import com.smis.common.constant.QueryConstant;
 import com.smis.dao.base.IBaseDao;
@@ -120,5 +121,42 @@ public class BaseDaoImpl<T, PK extends Serializable> implements IBaseDao<T, PK> 
 
 	public void remove(PK id) {
 		getSession().delete(id);
+	}
+
+	@Override
+	public PageVo<T> findPageByJpql(String jpql, String countJqpl,int pageIndex, int pageSize, List<Object> params) {
+		Query query = getSession().createQuery(jpql);
+		if(!CollectionUtils.isEmpty(params)){
+			for(int i =0; i < params.size(); i++){
+				query.setParameter(i, params.get(i));
+			}
+		}
+		query.setFirstResult((pageIndex - 1) * pageSize);
+		query.setMaxResults(pageSize);
+		List<T> list = query.list();
+		PageVo<T> page = new PageVo<T>();
+		page.setData(list);
+		page.setPageIndex(pageIndex);
+		page.setPageSize(pageSize);
+		return page;
+	}
+
+	@Override
+	public Integer findTotalSize(String jpql) {
+		return findTotalSize(jpql, null);
+	}
+
+	@Override
+	public Integer findTotalSize(String jpql, List<Object> params) {
+		Query q = getSession().createQuery(jpql);
+		int i = 0;
+		if(params != null){
+			for(Object param : params){
+				q.setParameter(i, param);
+				i++;
+			}
+		}
+		int count = ((Long) q.iterate().next()).intValue();
+		return count;
 	}
 }
