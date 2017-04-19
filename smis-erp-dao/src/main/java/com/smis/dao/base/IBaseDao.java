@@ -4,8 +4,8 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
-import com.simis.base.vo.PageVo;
-import com.simis.base.vo.QueryVo;
+import com.smis.model.vo.base.PageVo;
+import com.smis.model.vo.base.QueryVo;
 
 public interface IBaseDao<T, PK extends Serializable> {
 	public T get(PK id);

@@ -17,10 +17,10 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.CollectionUtils;
 
-import com.simis.base.vo.PageVo;
-import com.simis.base.vo.QueryVo;
 import com.smis.common.constant.QueryConstant;
 import com.smis.dao.base.IBaseDao;
+import com.smis.model.vo.base.PageVo;
+import com.smis.model.vo.base.QueryVo;
 
 @Repository 
 public class BaseDaoImpl<T, PK extends Serializable> implements IBaseDao<T, PK> {
