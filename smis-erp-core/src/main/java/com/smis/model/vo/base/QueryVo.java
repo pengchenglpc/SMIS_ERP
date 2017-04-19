@@ -1,4 +1,4 @@
-package com.simis.base.vo;
+package com.smis.model.vo.base;
 
 public class QueryVo {
 	private String field;

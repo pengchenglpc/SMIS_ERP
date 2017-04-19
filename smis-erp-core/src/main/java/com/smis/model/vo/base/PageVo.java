@@ -1,4 +1,4 @@
-package com.simis.base.vo;
+package com.smis.model.vo.base;
 
 import java.util.List;
 
