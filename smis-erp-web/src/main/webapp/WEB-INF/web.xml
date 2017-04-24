@@ -7,7 +7,7 @@
 	<!-- spring hibernate -->
 	<context-param>
 		<param-name>contextConfigLocation</param-name>
-		<param-value>classpath:root.xml</param-value>
+		<param-value>classpath:config/spring-*.xml</param-value>
 	</context-param>
 	<!-- openSessionInView配置 -->
 	<filter>
@@ -18,6 +18,10 @@
 			<param-value>true</param-value>
 		</init-param>
 	</filter>
+	<filter-mapping>
+		<filter-name>openSessionInViewFilter</filter-name>
+		<url-pattern>*.smis</url-pattern>
+	</filter-mapping>
 	<!--spring mvc 配置 -->
 	<servlet>
 		<servlet-name>springMVC</servlet-name>
@@ -33,7 +37,25 @@
 		<servlet-name>springMVC</servlet-name>
 		<url-pattern>*.smis</url-pattern>
 	</servlet-mapping>
-
+	<servlet>
+		<servlet-name>GlobalParam</servlet-name>
+		<servlet-class>com.smis.web.servlet.GlobalParamServlet</servlet-class>
+		<init-param>
+			<!-- 最大允许连续登录失败次数 -->
+			<param-name>loginErrCount</param-name>
+			<param-value>5</param-value>
+		</init-param>
+		<init-param>
+			<!-- 冻结时间 单位分 -->
+			<param-name>loginErrFreezeTime</param-name>
+			<param-value>5</param-value>
+		</init-param>
+		<load-on-startup>2</load-on-startup>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>GlobalParam</servlet-name>
+		<url-pattern>/GlobalParamServlet</url-pattern>
+	</servlet-mapping>
 
 	<!-- encodeing -->
 	<filter>
@@ -56,7 +78,19 @@
 
 
 	<listener>
-		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+		<description>spring监听器</description>
+		<listener-class>org.springframework.web.context.ContextLoaderListener
+		</listener-class>
+	</listener>
+	<listener>
+		<description>Introspector缓存清除监听器</description>
+		<listener-class>org.springframework.web.util.IntrospectorCleanupListener
+		</listener-class>
+	</listener>
+	<listener>
+		<description>request监听器</description>
+		<listener-class>org.springframework.web.context.request.RequestContextListener
+		</listener-class>
 	</listener>
 
 	<welcome-file-list>

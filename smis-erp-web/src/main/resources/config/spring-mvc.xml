@@ -53,6 +53,12 @@
  </bean>
 
 
- 
+ <!-- webmvc 拦截器 -->
+	<mvc:interceptors>
+		<mvc:interceptor>
+			<mvc:mapping path="/**" />
+			<bean class="com.smis.interceptor.WebMVCInterceptor"></bean>
+		</mvc:interceptor>
+	</mvc:interceptors>
   <aop:aspectj-autoproxy proxy-target-class="true"/>
 </beans>
