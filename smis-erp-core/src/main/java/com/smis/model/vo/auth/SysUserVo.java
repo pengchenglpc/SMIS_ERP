@@ -1,69 +1,30 @@
-package com.smis.model.entity.auth;
+package com.smis.model.vo.auth;
 
-import java.io.Serializable;
 import java.util.Date;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
-
-import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.DynamicUpdate;
-
-/**
- * 系统用户表
- * @author 李鹏程
- *
- */
-@Entity
-@Table(name = "sys_user", schema = "")
-@DynamicInsert(true)
-@DynamicUpdate(true)
-public class SysUser implements Serializable {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -8454454466998660773L;
-
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "ID", nullable = false)
+public class SysUserVo {
 	private Integer id;
 	
-	@Column(name="Login_Name", nullable=false)
 	private String loginName;	//登录名称
 	
-	@Column(name="User_Name", nullable=false)
 	private String userName;
 	
-	@Column(name="Password", nullable=false)
 	private String password;	//密码
 	
-	@Column(name="Role_ID", nullable=false)
 	private String roleId;		//角色ID
 	
-	@Column(name = "CreateTime", nullable = false)
 	private Date createTime;	//创建时间
 	
-	@Column(name="Status", nullable=false)
 	private Integer status;		//状态 0：无效 1有效
 	
-	@Column(name="Last_Login_Time", nullable=false)
 	private Date lastLoginTime;	//最后登录时间
 	
-	@Column(name="Last_Login_IP", nullable=false)
 	private String lastLogiIp;	//最后登录IP
 	
-	@Column(name="Is_Delete")
 	private Integer isDelete;	//是否删除  0：已删除 1未删除
 	
-	@Column(name="Login_Err_Count", nullable =false)
 	private Integer loginErrCount;	//连续登录失败次数
 	
-	@Column(name="Login_Err_Time", nullable=false)
 	private Long loginErrTime;	//最后登录失败时间
 	public Integer getId() {
 		return id;
@@ -137,6 +98,5 @@ public class SysUser implements Serializable {
 	public void setUserName(String userName) {
 		this.userName = userName;
 	}
-	
 	
 }
