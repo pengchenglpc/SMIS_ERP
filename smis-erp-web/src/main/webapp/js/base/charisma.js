@@ -95,11 +95,55 @@ $(document).ready(function () {
             }
         });
     });
-
+    function handle(menus, pid){
+		var _menus = [];
+		for(var key in menus){
+			var menu = menus[key];
+			if(menu['parentId'] == pid){
+				_menus.push(menu);
+				delete menus[key];
+				if(menu['menuType'] != 3){
+					menu['children'] = handle(menus, menu['menuId']);
+				}
+			}
+		}
+		return _menus;
+	}
+	function createMenu(menus, container){
+		for(var key in menus){
+			var $li = $('<li>');
+			var $a = $('<a>').appendTo($li);
+			
+			$li.appendTo(container);
+			if(menus[key]['menuType'] == 1){
+				$li.addClass('accordion');
+				$a.attr('href', '#');
+				$a.append('<i class="glyphicon glyphicon-align-justify"></i><span> '+ menus[key]['menuName'] + '</span>');
+				var $ul = $('<ul class="nav nav-pills nav-stacked">').appendTo($li);
+				createMenu(menus[key]['children'], $ul);
+			}else{
+				$a.addClass('ajax-link');
+				$a.append('<i class="glyphicon"></i><span> '+ menus[key]['menuName'] + '</span>');
+				$a.attr('href', menus[key]['url']);
+			}
+		}
+		
+	}
+    $.ajax('home/getMenu.smis',{
+    	async:false,
+    	dataType:'json',
+    	data:{id:0},
+    	success:function(result){
+    		var menus = result.data;
+    		var _menus = handle(menus, 0);
+    		createMenu(_menus, $('ul.main-menu'));
+    	}
+    });
+    
     //ajaxify menus
     $('a.ajax-link').click(function (e) {
         if (msie) e.which = 1;
-        if (e.which != 1 || !$('#is-ajax').prop('checked') || $(this).parent().hasClass('active')) return;
+       // if (e.which != 1 || !$('#is-ajax').prop('checked') || $(this).parent().hasClass('active')) return;
         e.preventDefault();
         $('.sidebar-nav').removeClass('active');
         $('.navbar-toggle').removeClass('active');
@@ -236,49 +280,6 @@ function docReady() {
         }
     });
 
-    //tour
-    if ($('.tour').length && typeof(tour) == 'undefined') {
-        var tour = new Tour();
-        tour.addStep({
-            element: "#content", /* html element next to which the step popover should be shown */
-            placement: "top",
-            title: "Custom Tour", /* title of the popover */
-            content: "You can create tour like this. Click Next." /* content of the popover */
-        });
-        tour.addStep({
-            element: ".theme-container",
-            placement: "left",
-            title: "Themes",
-            content: "You change your theme from here."
-        });
-        tour.addStep({
-            element: "ul.main-menu a:first",
-            title: "Dashboard",
-            content: "This is your dashboard from here you will find highlights."
-        });
-        tour.addStep({
-            element: "#for-is-ajax",
-            title: "Ajax",
-            content: "You can change if pages load with Ajax or not."
-        });
-        tour.addStep({
-            element: ".top-nav a:first",
-            placement: "bottom",
-            title: "Visit Site",
-            content: "Visit your front end from here."
-        });
-
-        tour.restart();
-    }
-
-    //datatable
-    $('.datatable').dataTable({
-        "sDom": "<'row'<'col-md-6'l><'col-md-6'f>r>t<'row'<'col-md-12'i><'col-md-12 center-block'p>>",
-        "sPaginationType": "bootstrap",
-        "oLanguage": {
-            "sLengthMenu": "_MENU_ records per page"
-        }
-    });
     $('.btn-close').click(function (e) {
         e.preventDefault();
         $(this).parent().parent().parent().fadeOut();
@@ -293,55 +294,6 @@ function docReady() {
     $('.btn-setting').click(function (e) {
         e.preventDefault();
         $('#myModal').modal('show');
-    });
-
-
-    $('#calendar').fullCalendar({
-        header: {
-            left: 'prev,next today',
-            center: 'title',
-            right: 'month,agendaWeek,agendaDay'
-        },
-        defaultDate: '2014-06-12',
-        events: [
-            {
-                title: 'All Day Event',
-                start: '2014-06-01'
-            },
-            {
-                title: 'Long Event',
-                start: '2014-06-07',
-                end: '2014-06-10'
-            },
-            {
-                id: 999,
-                title: 'Repeating Event',
-                start: '2014-06-09T16:00:00'
-            },
-            {
-                id: 999,
-                title: 'Repeating Event',
-                start: '2014-06-16T16:00:00'
-            },
-            {
-                title: 'Meeting',
-                start: '2014-06-12T10:30:00',
-                end: '2014-06-12T12:30:00'
-            },
-            {
-                title: 'Lunch',
-                start: '2014-06-12T12:00:00'
-            },
-            {
-                title: 'Birthday Party',
-                start: '2014-06-13T07:00:00'
-            },
-            {
-                title: 'Click for Google',
-                url: 'http://google.com/',
-                start: '2014-06-28'
-            }
-        ]
     });
 
 }

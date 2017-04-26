@@ -1,6 +1,6 @@
 package com.smis.model.vo.auth;
 
-public class SysMenuVo {
+public class SysMenuVo implements Comparable<SysMenuVo> {
 	private Integer menuId;	//菜单ID
 	
 	private Integer parentId;	//上级菜单ID 一级菜单为0
@@ -79,5 +79,10 @@ public class SysMenuVo {
 
 	public void setOperaValue(Integer operaValue) {
 		this.operaValue = operaValue;
+	}
+
+	@Override
+	public int compareTo(SysMenuVo arg0) {
+		return this.getOrderNum().compareTo(arg0.getOrderNum());
 	}
 }

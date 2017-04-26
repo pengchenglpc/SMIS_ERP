@@ -3,15 +3,24 @@ package com.smis.model.entity.auth;
 import java.io.Serializable;
 
 import javax.persistence.Column;
+import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Table;
+
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
 
 /**
  * 系统菜单表
  * @author dell
  *
  */
+@Entity
+@Table(name = "sys_menu", schema = "")
+@DynamicInsert(true)
+@DynamicUpdate(true)
 public class SysMenu implements Serializable {
 	/**
 	 * 
@@ -20,7 +29,7 @@ public class SysMenu implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "RoleId", nullable = false)
+	@Column(name = "MenuId", nullable = false)
 	private Integer menuId;	//菜单ID
 	
 	@Column(name = "ParentId", nullable = false)
@@ -32,10 +41,10 @@ public class SysMenu implements Serializable {
 	@Column(name = "MenuName", nullable = false)
 	private String menuName;	//菜单名称
 	
-	@Column(name = "Url", nullable = false)
+	@Column(name = "Url", nullable = true)
 	private String url;	//菜单路径
 	
-	@Column(name = "AuthUrls", nullable = false)
+	@Column(name = "AuthUrls", nullable = true)
 	private String authUrls;	//授权URL 多个用;号隔开
 	
 	@Column(name = "OrderNum", nullable = false)
@@ -107,7 +116,4 @@ public class SysMenu implements Serializable {
 	public void setOperaValue(Integer operaValue) {
 		this.operaValue = operaValue;
 	}
-	
-	
-	
 }

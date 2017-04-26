@@ -2,6 +2,7 @@ package com.smis.dao.auth.impl;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.LinkedList;
 import java.util.List;
 
 import javax.transaction.Transactional;
@@ -13,7 +14,11 @@ import org.springframework.util.CollectionUtils;
 import com.smis.common.util.LoggerUtil;
 import com.smis.dao.auth.ISysUserDao;
 import com.smis.dao.base.impl.BaseDaoImpl;
+import com.smis.model.entity.auth.SysMenu;
+import com.smis.model.entity.auth.SysRoleRight;
 import com.smis.model.entity.auth.SysUser;
+import com.smis.model.vo.auth.SysMenuVo;
+import com.smis.model.vo.auth.SysRoleRightVo;
 import com.smis.model.vo.auth.SysUserVo;
 
 @Repository 
@@ -58,6 +63,30 @@ public class SysUserDaoImpl extends BaseDaoImpl<SysUser, Serializable> implement
 			LoggerUtil.MyLogger.error("程序出错", e);
 			return false;
 		}
+	}
+
+	@Override
+	public List<SysMenuVo> getSysMenu() {
+		List<SysMenu> list = this.loadAll(SysMenu.class);
+		List<SysMenuVo> listVo = new LinkedList<SysMenuVo>();
+		for(SysMenu menu : list){
+			SysMenuVo menuVo = new SysMenuVo();
+			BeanUtils.copyProperties(menu, menuVo);
+			listVo.add(menuVo);
+		}
+		return listVo;
+	}
+
+	@Override
+	public List<SysRoleRightVo> getRoleRight() {
+		List<SysRoleRight> list = this.loadAll(SysRoleRight.class);
+		List<SysRoleRightVo> listVo = new LinkedList<SysRoleRightVo>();
+		for(SysRoleRight right : list){
+			SysRoleRightVo rightVo = new SysRoleRightVo();
+			BeanUtils.copyProperties(right, rightVo);
+			listVo.add(rightVo);
+		}
+		return listVo;
 	}
 	
 }

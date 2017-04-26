@@ -159,4 +159,10 @@ public class BaseDaoImpl<T, PK extends Serializable> implements IBaseDao<T, PK> 
 		int count = ((Long) q.iterate().next()).intValue();
 		return count;
 	}
+
+	@Override
+	public <C> List<C> loadAll(Class<C> clazz) {
+		Criteria criteria = this.getSession().createCriteria(clazz);
+		return criteria.list();
+	}
 }

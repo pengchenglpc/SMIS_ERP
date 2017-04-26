@@ -3,6 +3,7 @@ package com.smis.interceptor;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.URL;
+import java.util.List;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -16,15 +17,20 @@ import org.springframework.web.servlet.ModelAndView;
 import com.alibaba.fastjson.JSONObject;
 import com.smis.controller.base.BaseConstroller;
 import com.smis.facade.auth.ILoginService;
+import com.smis.facade.auth.ISysMenuCacheService;
 import com.smis.model.vo.auth.SysUserVo;
 import com.smis.model.vo.base.Message;
 
 public class WebMVCInterceptor implements HandlerInterceptor {
 	private String[] EXCLUDE_URL = {"home/login.smis"};
-	private String[] AUTH_URL = {};
+	private String[] AUTH_URL = {"home/getMenu.smis", "home/logout.smis", "home/login_query.smis"};
 	
 	@Autowired
 	private ILoginService loginService;
+	
+	@Autowired
+	private ISysMenuCacheService sysMenuCache;
+	
 	@Override
 	public void afterCompletion(HttpServletRequest arg0, HttpServletResponse arg1, Object arg2, Exception arg3)
 			throws Exception {
@@ -69,6 +75,10 @@ public class WebMVCInterceptor implements HandlerInterceptor {
 			SysUserVo user = (SysUserVo) session.getAttribute(BaseConstroller.LOGIN_CURRENT_USER_KEY);
 			if(user == null){
 				Cookie[] cookies = request.getCookies();
+				if(cookies == null){
+					this.setUnLogin(response, result);
+					return false;
+				}
 				Cookie cookie = null,
 					   pwd_cookie = null;
 				for(Cookie _cookie : cookies){
@@ -101,9 +111,17 @@ public class WebMVCInterceptor implements HandlerInterceptor {
 					return true;
 				}
 			}
+			List<String> listAuth = sysMenuCache.getAuthUrls(user.getRoleId());
+
+			for (String authUrl : listAuth) {
+				if (url.indexOf(authUrl) != -1) {
+					return true;
+				}
+			}
 			result.setResultCode(-1);
 			result.setMsg("无权访问！");
 			this.retJson(response, result);
+			return false;
 		}
 		this.setUnLogin(response, result);
 		return false;

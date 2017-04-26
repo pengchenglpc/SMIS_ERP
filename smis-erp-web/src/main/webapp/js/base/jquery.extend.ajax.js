@@ -3,8 +3,13 @@
     var _ajax=$.ajax;  
        
     //重写jquery的ajax方法  
-    $.ajax=function(opt){  
+    $.ajax=function(url, opt){  
         //备份opt中error和success方法  
+    	if(typeof url == 'object'){
+    		opt = url;
+    	}else{
+    		opt['url'] = url;
+    	}
         var fn = {  
             error:function(XMLHttpRequest, textStatus, errorThrown){},  
             success:function(data, textStatus){}  
@@ -24,8 +29,12 @@
             },  
             success:function(data, textStatus){  
                 //成功回调方法增强处理  
-            	if(data['isLogin']){
-            		fn.success(data, textStatus);
+            	if(data['login']){
+            		if(data['resultCode'] >= 0){
+            			fn.success(data, textStatus);
+            		}else{
+            			$('body').noty({layout:'center',type:'error',text: data['msg']});
+            		}
             	}else{
             		location.href = "login.html";
             	}

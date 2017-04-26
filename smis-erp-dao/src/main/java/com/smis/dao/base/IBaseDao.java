@@ -21,4 +21,5 @@ public interface IBaseDao<T, PK extends Serializable> {
 	public PageVo<T> findPageByJpql(String jpql, String countJqpl,int pageIndex, int pageSize, List<Object> params);
 	public Integer findTotalSize(String jqpl);
 	public Integer findTotalSize(String jqpl, List<Object> params);
+	public <C> List<C> loadAll(Class<C> clazz);
 }

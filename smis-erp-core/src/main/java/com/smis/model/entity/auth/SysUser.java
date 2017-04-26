@@ -43,7 +43,7 @@ public class SysUser implements Serializable {
 	private String password;	//密码
 	
 	@Column(name="Role_ID", nullable=false)
-	private String roleId;		//角色ID
+	private Integer roleId;		//角色ID
 	
 	@Column(name = "CreateTime", nullable = false)
 	private Date createTime;	//创建时间
@@ -83,10 +83,10 @@ public class SysUser implements Serializable {
 	public void setPassword(String password) {
 		this.password = password;
 	}
-	public String getRoleId() {
+	public Integer getRoleId() {
 		return roleId;
 	}
-	public void setRoleId(String roleId) {
+	public void setRoleId(Integer roleId) {
 		this.roleId = roleId;
 	}
 	public Date getCreateTime() {

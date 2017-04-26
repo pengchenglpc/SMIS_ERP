@@ -1,7 +1,11 @@
 package com.smis.controller.auth;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.Cookie;
@@ -16,9 +20,13 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.alibaba.druid.util.StringUtils;
 import com.smis.common.util.LoggerUtil;
 import com.smis.controller.base.BaseConstroller;
 import com.smis.facade.auth.ILoginService;
+import com.smis.facade.auth.ISysMenuCacheService;
+import com.smis.model.entity.auth.SysMenu;
+import com.smis.model.vo.auth.SysMenuVo;
 import com.smis.model.vo.auth.SysUserVo;
 import com.smis.model.vo.base.Message;
 
@@ -27,6 +35,9 @@ import com.smis.model.vo.base.Message;
 public class LoginController extends BaseConstroller {
 	@Autowired
 	private ILoginService loginService;
+	
+	@Autowired
+	private ISysMenuCacheService sysMenuCache;
 	
 	@RequestMapping(value = "/login", method={RequestMethod.POST,RequestMethod.GET})
 	@ResponseBody
@@ -62,20 +73,23 @@ public class LoginController extends BaseConstroller {
 		}
 		return msg;
 	}
-	
+	@RequestMapping(value = "/login_query", method={RequestMethod.POST,RequestMethod.GET})
+	@ResponseBody
 	public Message loginQuery(HttpServletResponse response,
 			HttpServletRequest request){
 		Message msg = new Message();
 		SysUserVo user = this.getLoginUser(request);
 		Map<String, Object> retMap = new HashMap<String, Object>();
 		retMap.put("userName", user.getUserName());
+		retMap.put("userId", user.getId());
 		msg.setData(retMap);
 		return msg;
 	}
+	
 	@RequestMapping(value = "/logout", method={RequestMethod.POST,RequestMethod.GET})
 	@ResponseBody
 	public Message logout(HttpServletResponse response,
-			HttpServletRequest request){
+			HttpServletRequest request) throws IOException{
 		Message msg = new Message();
 		msg.setResultCode(0);
 		HttpSession session = request.getSession();
@@ -84,6 +98,38 @@ public class LoginController extends BaseConstroller {
 			session.removeAttribute(enumeration.nextElement());
 		}
 		session.invalidate();
+		response.sendRedirect("login.html");
+		return msg;
+	}
+	
+	@RequestMapping(value = "/getMenu", method={RequestMethod.POST,RequestMethod.GET})
+	@ResponseBody
+	public Message getMenu(HttpServletResponse response,
+	HttpServletRequest request){
+		Message msg = new Message();
+		msg.setResultCode(0);
+		try {
+			// 权限ID
+			String menuId = request.getParameter("id");
+			Integer pid = null;
+			if (StringUtils.isEmpty(menuId)) {
+				msg.setMsg("权限菜单ID为空");
+				msg.setResultCode(-1);
+				return msg;
+			} else {
+				pid = Integer.valueOf(menuId);
+			}
+			SysUserVo userInfo = this.getLoginUser(request);
+			int roleID = userInfo.getRoleId();
+			List<SysMenuVo> listMenu = sysMenuCache.getRightMenu(roleID);
+			Collections.sort(listMenu);
+			msg.setData(listMenu);
+		} catch (Exception e) {
+			msg.setResultCode(-1);
+			msg.setMsg("系统内部错误");
+			//logger.error("系统内部错误", e);
+			LoggerUtil.MyLogger.error("系统内部错误", e);
+		}
 		return msg;
 	}
 }
