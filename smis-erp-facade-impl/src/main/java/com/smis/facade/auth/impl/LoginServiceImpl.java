@@ -10,11 +10,11 @@ import org.springframework.stereotype.Service;
 
 import com.smis.common.util.GlobalParam;
 import com.smis.dao.auth.ISysLoginLogDao;
-import com.smis.dao.auth.ISysMenuDao;
 import com.smis.dao.auth.ISysUserDao;
 import com.smis.facade.auth.ILoginService;
 import com.smis.model.entity.auth.SysLoginLog;
 import com.smis.model.vo.auth.SysMenuVo;
+import com.smis.model.vo.auth.SysRoleRightVo;
 import com.smis.model.vo.auth.SysUserVo;
 import com.smis.model.vo.base.Message;
 
@@ -25,8 +25,6 @@ public class LoginServiceImpl implements ILoginService {
 	private ISysUserDao sysUserDao;
 	@Autowired
 	private ISysLoginLogDao logDao;
-	@Autowired
-	private ISysMenuDao menuDao;
 	
 	private void saveLoginLog(String login, String ip, SysUserVo user,Integer status, String remark){
 		SysLoginLog log = new SysLoginLog();
@@ -86,7 +84,12 @@ public class LoginServiceImpl implements ILoginService {
 
 	@Override
 	public List<SysMenuVo> getAllMenu() {
-		return menuDao.loadAll();
+		return this.sysUserDao.getSysMenu();
+	}
+
+	@Override
+	public List<SysRoleRightVo> getSysRoleRight() {
+		return null;
 	}
 
 
