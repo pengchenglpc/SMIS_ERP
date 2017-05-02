@@ -138,6 +138,8 @@ public class BaseDaoImpl<T, PK extends Serializable> implements IBaseDao<T, PK> 
 		page.setData(list);
 		page.setPageIndex(pageIndex);
 		page.setPageSize(pageSize);
+		int totalSize = this.findTotalSize(countJqpl, params);
+		page.setTotalSize(totalSize);
 		return page;
 	}
 
